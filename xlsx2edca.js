@@ -129,7 +129,7 @@ if (typeof file_path !== 'undefined'){
                     release.parties.push(buildBlock(paths, worksheets[parties_worksheet_index].data[p]).parties); //fixes path
                 }
             } else {
-                console.log('Warning: Missing parties ', release.clave_procedimiento);
+                console.log('\tWarning: Missing parties ', release.clave_procedimiento);
             }
 
             //Buyer
@@ -138,7 +138,7 @@ if (typeof file_path !== 'undefined'){
             if (buyerIndex.length > 0) {
                 release.buyer = buildBlock(paths, worksheets[buyer_worksheet_index].data[buyerIndex[0]]).buyer; //fixes path
             } else {
-                console.log('Warning: Missing buyer ', release.clave_procedimiento);
+                console.log('\tWarning: Missing buyer ', release.clave_procedimiento);
             }
 
             //planning
@@ -148,7 +148,7 @@ if (typeof file_path !== 'undefined'){
                 release.planning = buildBlock(paths, worksheets[planning_worksheet_index].data[planningIndex[0]]).planning; //fixes path
             } else {
                 release.planning = {};
-                console.log('Warning: Missing planning ', release.clave_procedimiento);
+                console.log('\tWarning: Missing planning ', release.clave_procedimiento);
             }
 
             //planning -> contizaciones
@@ -161,7 +161,7 @@ if (typeof file_path !== 'undefined'){
                 release.planning.budget = buildBlock(paths, worksheets[planning_budget_worksheet_index].data[planningBudgetIndex[0]]).budget; //fixes path
             } else {
                 release.planning.budget = {};
-                console.log('Warning: Missing planning -> budget ', release.clave_procedimiento);
+                console.log('\tWarning: Missing planning -> budget ', release.clave_procedimiento);
             }
 
             //planning milestones
@@ -176,7 +176,7 @@ if (typeof file_path !== 'undefined'){
                     release.planning.documents.push(buildBlock(paths, worksheets[planning_documents_worksheet_index].data[d]).planning.documents); // fixes path
                 }
             } else {
-                console.log('Warning: Missing planning -> documents ', release.clave_procedimiento);
+                console.log('\tWarning: Missing planning -> documents ', release.clave_procedimiento);
             }
 
             //tender
@@ -187,7 +187,7 @@ if (typeof file_path !== 'undefined'){
             if (tenderIndex.length > 0) {
                 release.tender = buildBlock(paths, worksheets[tender_worksheet_index].data[tenderIndex[0]]).tender; //fixes path
             } else {
-                console.log('Warning: Missing tender ', release.clave_procedimiento);
+                console.log('\tWarning: Missing tender ', release.clave_procedimiento);
             }
 
             //tender -> items
@@ -200,7 +200,7 @@ if (typeof file_path !== 'undefined'){
                     release.tender.items.push(buildBlock(paths, worksheets[tender_items_worksheet_index].data[item]).tender.items); //fixes path
                 }
             } else {
-                console.log('Warning: Missing tender -> items ', release.clave_procedimiento);
+                console.log('\tWarning: Missing tender -> items ', release.clave_procedimiento);
             }
 
             //tender -> tenderers
@@ -213,7 +213,7 @@ if (typeof file_path !== 'undefined'){
                     release.tender.tenderers.push(buildBlock(paths, worksheets[tender_tenderers_worksheet_index].data[tenderer]).tender.tenderers); //fixes path
                 }
             } else {
-                console.log('Warning: Missing tender -> tenderers ', release.clave_procedimiento);
+                console.log('\tWarning: Missing tender -> tenderers ', release.clave_procedimiento);
             }
 
             //tender -> procuringEntity
@@ -224,7 +224,7 @@ if (typeof file_path !== 'undefined'){
             if (tenderProcuringEntityIndex.length > 0) {
                     release.tender.procuringEntity = buildBlock(paths, worksheets[tender_procuring_entity_worksheet_index].data[tenderProcuringEntityIndex[0]]).tender.procuringEntity; //fixes path
             } else {
-                console.log('Warning: Missing tender -> procuringEntity ', release.clave_procedimiento);
+                console.log('\tWarning: Missing tender -> procuringEntity ', release.clave_procedimiento);
             }
 
             //awards
@@ -232,14 +232,19 @@ if (typeof file_path !== 'undefined'){
             paths = worksheets[awards_worksheet_index].data[0];
             let awardsIndexes = findRows(worksheets[awards_worksheet_index].data, 0, release.clave_procedimiento);
 
+            let awards_ids = [];
+
             if (awardsIndexes.length > 0) {
-                for (let award of awardsIndexes) {
-                    release.awards.push( buildBlock(paths, worksheets[awards_worksheet_index].data[award]).awards ); //fixes path
+                for (let awardIndex of awardsIndexes) {
+                    //save award id for next sections
+                    awards_ids.push(worksheets[awards_worksheet_index].data[awardIndex][1]);
+                    release.awards.push( buildBlock(paths, worksheets[awards_worksheet_index].data[awardIndex]).awards ); //fixes path
                 }
             } else {
-                console.log('Warning: Missing awards ', release.clave_procedimiento);
+                console.log('\tWarning: Missing awards ', release.clave_procedimiento);
             }
 
+            //TODO: add blocks to their respective award (awards_ids)
             //awards -> suppliers
             //awards -> items
             //awards -> documents
@@ -249,13 +254,19 @@ if (typeof file_path !== 'undefined'){
             paths = worksheets[contracts_worksheet_index].data[0];
             let contractsIndexes = findRows(worksheets[contracts_worksheet_index].data, 0, release.clave_procedimiento);
 
+            let contracts_ids = [];
+
             if (contractsIndexes.length > 0) {
-                for (let contract of contractsIndexes) {
-                    release.contracts.push( buildBlock(paths, worksheets[contracts_worksheet_index].data[contract]).contracts ); //fixes path
+                for (let contractIndex of contractsIndexes) {
+                    //save contract id for next sections
+                    contracts_ids.push(worksheets[contracts_worksheet_index].data[contractIndex][1]);
+                    release.contracts.push( buildBlock(paths, worksheets[contracts_worksheet_index].data[contractIndex]).contracts ); //fixes path
                 }
             } else {
-                console.log('Warning: Missing contracts ', release.clave_procedimiento);
+                console.log('\tWarning: Missing contracts ', release.clave_procedimiento);
             }
+
+            //TODO: add blocks to their respective block (contracts_ids)
             //contracts -> items
             //contracts -> documents
             //contracts -> implementation -> transactions
