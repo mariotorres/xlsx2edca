@@ -91,30 +91,36 @@ if (typeof file_path !== 'undefined'){
     let parties_worksheet_index = 3;
     let buyer_worksheet_index = 4;
     let planning_worksheet_index = 6;
-    let planning_cotizaciones_worksheet_index = 7;
+    //let planning_cotizaciones_worksheet_index = 7;
     let planning_budget_worksheet_index = 8;
-    let planning_milestones_worksheet_index = 9;
+    //let planning_milestones_worksheet_index = 9;
     let planning_documents_worksheet_index = 10;
+
     let tender_worksheet_index = 11;
+    let tender_items_worksheet_index = 14;
+    let tender_tenderers_worksheet_index = 15;
+    let tender_procuring_entity_worksheet_index = 16;
 
     console.log('\nBuilding EDCA JSON files\n');
 
     //Releases
     let paths = worksheets[release_worksheet_index].data[0];
     for (let ri = 1; ri < worksheets[release_worksheet_index].data.length; ri++) {
-
+        
+        //build release object 
         let release = buildBlock(paths, worksheets[release_worksheet_index].data[ri]);
+        
         if (release.clave_procedimiento !== null && release.clave_procedimiento !== "" && typeof release.clave_procedimiento !== 'undefined') {
             console.log('Processing ', release.clave_procedimiento);
             release.initiationType = "tender";
 
             //Parties
             release.parties = [];
-            let parties = findRows(worksheets[parties_worksheet_index].data, release.clave_procedimiento);
+            let partiesIndexes = findRows(worksheets[parties_worksheet_index].data, release.clave_procedimiento);
             paths = worksheets[parties_worksheet_index].data[0];
 
-            if (parties.length > 0) {
-                for (let p of parties) {
+            if (partiesIndexes.length > 0) {
+                for (let p of partiesIndexes) {
                     release.parties.push(buildBlock(paths, worksheets[parties_worksheet_index].data[p]).parties); //path
                 }
             } else {
@@ -150,45 +156,77 @@ if (typeof file_path !== 'undefined'){
                 release.planning.budget = buildBlock(paths, worksheets[planning_budget_worksheet_index].data[planningBudgetIndex[0]]).budget; //fix path
             } else {
                 release.planning.budget = {};
-                console.log('Warning: Missing budget ', release.clave_procedimiento);
+                console.log('Warning: Missing planning -> budget ', release.clave_procedimiento);
             }
 
             //planning milestones
 
             //planning documents
             paths = worksheets[planning_documents_worksheet_index].data[0];
-            let planningDocumentsIndex = findRows(worksheets[planning_documents_worksheet_index].data, release.clave_procedimiento);
+            let planningDocumentsIndexes = findRows(worksheets[planning_documents_worksheet_index].data, release.clave_procedimiento);
 
             release.planning.documents = [];
-            if (planningDocumentsIndex.length > 0) {
-                for (let d of planningDocumentsIndex) {
+            if (planningDocumentsIndexes.length > 0) {
+                for (let d of planningDocumentsIndexes) {
                     release.planning.documents.push(buildBlock(paths, worksheets[planning_documents_worksheet_index].data[d]).planning.documents); // fix path
                 }
             } else {
-                console.log('Warning: Missing documents ', release.clave_procedimiento);
+                console.log('Warning: Missing planning -> documents ', release.clave_procedimiento);
             }
 
             //tender
+            release.tender = {};
             paths = worksheets[tender_worksheet_index].data[0];
             let tenderIndex = findRows(worksheets[tender_worksheet_index].data, release.clave_procedimiento);
 
             if (tenderIndex.length > 0) {
                 release.tender = buildBlock(paths, worksheets[tender_worksheet_index].data[tenderIndex[0]]).tender; //fix path
             } else {
-                release.planning.budget = {};
                 console.log('Warning: Missing tender ', release.clave_procedimiento);
             }
 
             //tender -> items
+            release.tender.items = [];
+            let tenderItemsIndexes = findRows(worksheets[tender_items_worksheet_index].data, release.clave_procedimiento);
+            paths = worksheets[tender_items_worksheet_index].data[0];
+
+            if (tenderItemsIndexes.length > 0) {
+                for (let item of tenderItemsIndexes) {
+                    release.tender.items.push(buildBlock(paths, worksheets[tender_items_worksheet_index].data[item]).tender.items); //fix path
+                }
+            } else {
+                console.log('Warning: Missing tender -> items ', release.clave_procedimiento);
+            }
+
             //tender -> tenderers
+            release.tender.tenderers = [];
+            let tenderTenderersIndexes = findRows(worksheets[tender_tenderers_worksheet_index].data, release.clave_procedimiento);
+            paths = worksheets[tender_tenderers_worksheet_index].data[0];
+
+            if (tenderTenderersIndexes.length > 0) {
+                for (let tenderer of tenderTenderersIndexes) {
+                    release.tender.tenderers.push(buildBlock(paths, worksheets[tender_tenderers_worksheet_index].data[tenderer]).tender.tenderers); //fix path
+                }
+            } else {
+                console.log('Warning: Missing tender -> tenderers ', release.clave_procedimiento);
+            }
+
             //tender -> procuringEntity
+            release.tender.procuringEntity = {};
+            let tenderProcuringEntityIndex = findRows(worksheets[tender_procuring_entity_worksheet_index].data, release.clave_procedimiento);
+            paths = worksheets[tender_procuring_entity_worksheet_index].data[0];
+
+            if (tenderProcuringEntityIndex.length > 0) {
+                    release.tender.procuringEntity = buildBlock(paths, worksheets[tender_procuring_entity_worksheet_index].data[tenderProcuringEntityIndex[0]]).tender.procuringEntity; //fix path
+            } else {
+                console.log('Warning: Missing tender -> procuringEntity ', release.clave_procedimiento);
+            }
 
             //awards
             //awards -> suppliers
             //awards -> items
             //awards -> documents
 
-            //contracts
             //contracts
             //contracts -> items
             //contracts -> documents
