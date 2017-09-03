@@ -1,0 +1,16 @@
+{
+  "name": "xls2edca",
+  "version": "1.0.0",
+  "description": "Convierte una plantilla XLSX a achivos JSON compatibles con el EDCAMX",
+  "main": "xls2edca.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mario Torres",
+  "license": "MIT",
+  "dependencies": {
+    "jsonfile": "^3.0.1",
+    "node-xlsx": "^0.11.0",
+    "pg-promise": "^6.5.1"
+  }
+}
