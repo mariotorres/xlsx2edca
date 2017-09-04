@@ -105,11 +105,13 @@ if (typeof file_path !== 'undefined'){
     let awards_worksheet_index = 20;
     let awards_suppliers_worksheet_index = 21;
     let awards_items_worksheet_index = 22;
+    let awards_documents_worksheet_index = 23;
 
     let contracts_worksheet_index = 25;
     let contracts_items_worksheet_index = 26;
+    let contracts_documents_worksheet_index = 27;
 
-    console.log('\nBuilding EDCA JSON files\n');
+    console.log('\nBuilding EDCA JSON ...\n');
 
     //Releases
     let paths = worksheets[release_worksheet_index].data[0];
@@ -240,7 +242,20 @@ if (typeof file_path !== 'undefined'){
                     let award =  buildBlock(paths, worksheets[awards_worksheet_index].data[awardIndex]).awards; //fixes path
                     //Add blocks to their respective award
                     let award_id = worksheets[awards_worksheet_index].data[awardIndex][1];
+
                     //awards -> suppliers
+                    award.suppliers = [];
+                    let awardSuppliersIndexes = findRows(worksheets[awards_suppliers_worksheet_index].data, 1, award_id);
+
+                    if (awardSuppliersIndexes.length > 0) {
+                        for (let supplier of awardSuppliersIndexes) {
+                            award.suppliers.push(buildBlock(worksheets[awards_suppliers_worksheet_index].data[0],
+                                worksheets[awards_suppliers_worksheet_index].data[supplier]).awards.suppliers); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing awards -> suppliers ', award_id);
+                    }
+
 
                     //awards -> items
                     award.items = [];
@@ -256,6 +271,17 @@ if (typeof file_path !== 'undefined'){
                     }
 
                     //awards -> documents
+                    award.documents = [];
+                    let awardDocumentsIndexes = findRows(worksheets[awards_documents_worksheet_index].data, 1, award_id);
+
+                    if (awardDocumentsIndexes.length > 0) {
+                        for (let document of awardDocumentsIndexes) {
+                            award.documents.push(buildBlock(worksheets[awards_documents_worksheet_index].data[0],
+                                worksheets[awards_documents_worksheet_index].data[document]).awards.documents); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing awards -> documents ', award_id);
+                    }
 
                     release.awards.push( award );
                 }
@@ -289,7 +315,20 @@ if (typeof file_path !== 'undefined'){
                     }
 
                     //contracts -> documents
+                    contract.documents = [];
+                    let contractDocumentsIndexes = findRows(worksheets[contracts_documents_worksheet_index].data, 1, contract_id);
+
+                    if (contractDocumentsIndexes.length > 0) {
+                        for (let document of contractDocumentsIndexes) {
+                            contract.documents.push(buildBlock(worksheets[contracts_documents_worksheet_index].data[0],
+                                worksheets[contracts_documents_worksheet_index].data[document]).contracts.documents); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing awards -> documents ', contract_id);
+                    }
+
                     //contracts -> implementation -> transactions
+                    //contract.implementation = {}; contract.implementation.transactions = [ ];
 
                     release.contracts.push( contract );
                 }
