@@ -111,6 +111,10 @@ if (typeof file_path !== 'undefined'){
     let contracts_items_worksheet_index = 26;
     let contracts_documents_worksheet_index = 27;
 
+    let contracts_implementation_transactions_worksheet_index = 30;
+    let contracts_implementation_milestones_worksheet_index = 31;
+    let contracts_implementation_documents_worksheet_index = 32;
+
     console.log('\nBuilding EDCA JSON ...\n');
 
     //Releases
@@ -311,7 +315,7 @@ if (typeof file_path !== 'undefined'){
                                 worksheets[contracts_items_worksheet_index].data[item]).contracts.items); //fixes path
                         }
                     } else {
-                        console.log('\tWarning: Missing contract -> items ', contract_id);
+                        console.log('\tWarning: Missing contracts -> items ', contract_id);
                     }
 
                     //contracts -> documents
@@ -324,11 +328,48 @@ if (typeof file_path !== 'undefined'){
                                 worksheets[contracts_documents_worksheet_index].data[document]).contracts.documents); //fixes path
                         }
                     } else {
-                        console.log('\tWarning: Missing awards -> documents ', contract_id);
+                        console.log('\tWarning: Missing contracts -> documents ', contract_id);
                     }
 
                     //contracts -> implementation -> transactions
-                    //contract.implementation = {}; contract.implementation.transactions = [ ];
+                    contract.implementation = {};
+                    contract.implementation.transactions = [];
+                    let contractImplementationTransactionsIndexes = findRows(worksheets[contracts_implementation_transactions_worksheet_index].data, 1, contract_id );
+
+                    if (contractImplementationTransactionsIndexes.length > 0) {
+                        for (let transaction of contractImplementationTransactionsIndexes) {
+                            contract.implementation.transactions.push(buildBlock(worksheets[contracts_implementation_transactions_worksheet_index].data[0],
+                                worksheets[contracts_implementation_transactions_worksheet_index].data[transaction]).implementation.transactions); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing contracts -> implementation -> transactions ', contract_id);
+                    }
+
+                    //contracts -> implementation -> milestones
+                    contract.implementation.milestones = [];
+                    let contractImplementationMilestonesIndexes = findRows(worksheets[contracts_implementation_milestones_worksheet_index].data, 1, contract_id);
+
+                    if (contractImplementationMilestonesIndexes.length > 0) {
+                        for (let milestone of contractImplementationMilestonesIndexes) {
+                            contract.implementation.milestones.push(buildBlock(worksheets[contracts_implementation_milestones_worksheet_index].data[0],
+                                worksheets[contracts_implementation_milestones_worksheet_index].data[milestone]).implementation.milestones); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing contracts -> implementation -> milestones ', contract_id);
+                    }
+
+                    //contracts -> implementation -> documents
+                    contract.implementation.documents = [];
+                    let contractImplementationDocumentsIndexes = findRows(worksheets[contracts_implementation_documents_worksheet_index].data, 1, contract_id);
+
+                    if (contractImplementationDocumentsIndexes.length > 0) {
+                        for (let document of contractImplementationDocumentsIndexes) {
+                            contract.implementation.documents.push(buildBlock(worksheets[contracts_implementation_documents_worksheet_index].data[0],
+                                worksheets[contracts_implementation_documents_worksheet_index].data[document]).implementation.documents); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing contracts -> implementation -> documents ', contract_id);
+                    }
 
                     release.contracts.push( contract );
                 }
