@@ -10,14 +10,14 @@ function buildPath (obj, tokens, value){
         obj[first_token] = {};
     }
 
+    //recortar tokens
     tokens = tokens.slice(1);
 
-    //recortar tokens
     if (tokens.length > 0) {
         buildPath(obj[first_token], tokens, value);
     } else {
         if (!isArray(first_token)) {
-            obj[first_token] = value;
+            obj[first_token] = (isBoolean(first_token))?parseBoolean(value):value;
         } else{
             obj[first_token] = [value];
         }
@@ -51,7 +51,7 @@ function findRows(WorkSheet, index, key) {
 
 function deleteNullProperties(obj, recursive) {
     for (let i in obj) {
-        if (obj[i] === null || JSON.stringify(obj[i]) === JSON.stringify({}) || obj[i] === '' ) {
+        if (obj[i] === null || JSON.stringify(obj[i]) === JSON.stringify({}) || obj[i] === '' || obj[i] === 'N/A'|| obj[i]=== 'No aplica') {
             delete obj[i];
         } else if (recursive && typeof obj[i] === 'object') {
             deleteNullProperties(obj[i], recursive);
@@ -72,6 +72,42 @@ function isArray(prop) {
             break;
         default:
             return false;
+    }
+}
+
+function isBoolean(prop) {
+    switch(prop) {
+        case 'hasEnquiries':
+            return true;
+        default:
+            return false;
+    }
+}
+
+function parseBoolean(b){
+    switch (b) {
+        case true:
+            return true;
+        case 'True':
+            return true;
+        case 'true':
+            return true;
+        case 'Si':
+            return true;
+        case 'si':
+            return true;
+        case false:
+            return false;
+        case 'False':
+            return false;
+        case 'false':
+            return false;
+        case 'no':
+            return false;
+        case 'No':
+            return false;
+        default:
+            return null
     }
 }
 
