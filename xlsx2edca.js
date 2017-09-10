@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var xlsx = require('node-xlsx').default;
-var file_path = process.argv[2];
 var jsonfile = require('jsonfile');
 const dotenv = require('dotenv').config({path: path.join(__dirname, '.env')});
 
@@ -112,7 +111,17 @@ function parseBoolean(b){
     }
 }
 
-if (typeof file_path !== 'undefined'){
+const file_path = process.argv[2];
+
+
+if (typeof file_path === 'undefined'){
+    console.log('Usage: node xlsx2edca.js <xlsx_file_path> ...\n' +
+        '\t--show-worksheets\t shows worksheets names and indexes');
+    process.exit(0);
+}
+
+if ( fs.existsSync(file_path) ) {
+
     console.log("Fetching data -> ", file_path);
     const worksheets = xlsx.parse(fs.readFileSync(file_path));
 
@@ -121,6 +130,10 @@ if (typeof file_path !== 'undefined'){
     for ( ws of worksheets){
         console.log('\t', ws.name, ' -> index -> ', ws_index );
         ws_index++;
+    }
+
+    if (process.argv[3 ]=== '--show-worksheets'){
+        process.exit(0)
     }
 
     //worksheet config
@@ -439,5 +452,6 @@ if (typeof file_path !== 'undefined'){
     }
 
 } else {
-    console.log('Usage: node xlsx2edca.js <xlsx_file_path>');
+    console.log('Error: File does not exists :(');
+    process.exit(1);
 }
