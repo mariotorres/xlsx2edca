@@ -17,7 +17,7 @@ function buildPath (obj, tokens, value){
         buildPath(obj[first_token], tokens, value);
     } else {
         if (!isArray(first_token)) {
-            obj[first_token] = (isBoolean(first_token))?parseBoolean(value):value;
+            obj[first_token] = (isBoolean(first_token)?parseBoolean(value):value);
         } else{
             obj[first_token] = [value];
         }
