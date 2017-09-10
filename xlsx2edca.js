@@ -17,7 +17,7 @@ function buildPath (obj, tokens, value){
         buildPath(obj[first_token], tokens, value);
     } else {
         if (!isArray(first_token)) {
-            obj[first_token] = (isBoolean(first_token)?parseBoolean(value):value);
+            obj[first_token] = (isBoolean(first_token)?parseBoolean(value):(isNaN(value)?value:Number(value)));
         } else{
             obj[first_token] = [value];
         }
@@ -51,7 +51,8 @@ function findRows(WorkSheet, index, key) {
 
 function deleteNullProperties(obj, recursive) {
     for (let i in obj) {
-        if (obj[i] === null || JSON.stringify(obj[i]) === JSON.stringify({}) || obj[i] === '' || obj[i] === 'N/A'|| obj[i]=== 'No aplica') {
+        if (JSON.stringify(obj[i]) === JSON.stringify({}) || JSON.stringify(obj[i]) === JSON.stringify([]) ||
+            obj[i]=== null || obj[i] === '' || obj[i] === 'N/A'|| obj[i]=== 'No aplica') {
             delete obj[i];
         } else if (recursive && typeof obj[i] === 'object') {
             deleteNullProperties(obj[i], recursive);
@@ -125,45 +126,47 @@ if ( fs.existsSync(file_path) ) {
     console.log("Fetching data -> ", file_path);
     const worksheets = xlsx.parse(fs.readFileSync(file_path));
 
-    console.log('Parsed WorkSheets:');
-    let ws_index = 0;
-    for ( ws of worksheets){
-        console.log('\t', ws.name, ' -> index -> ', ws_index );
-        ws_index++;
-    }
-
-    if (process.argv[3 ]=== '--show-worksheets'){
-        process.exit(0)
+    if (process.argv[3] === '--show-worksheets'){
+        console.log('Parsed WorkSheets:');
+        for ( let ws in worksheets){
+            console.log('\t', worksheets[ws].name, ' -> index -> ', ws );
+        }
+        process.exit(0);
     }
 
     //worksheet config
-    let release_worksheet_index = (process.env.RELEASE_WORKSHEET_INDEX || 2);
-    let parties_worksheet_index = (process.env.PARTIES_WORKSHEET_INDEX || 3);
-    let buyer_worksheet_index = (process.env.BUYER_WORKSHEET_INDEX ||4);
+    let release_worksheet_index = (process.env.RELEASE_WORKSHEET_INDEX || 0);
+    let parties_worksheet_index = (process.env.PARTIES_WORKSHEET_INDEX || 1);
+    let buyer_worksheet_index = (process.env.BUYER_WORKSHEET_INDEX ||2);
 
-    let planning_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 6);
-    //let planning_cotizaciones_worksheet_index = 7;
-    let planning_budget_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 8);
-    //let planning_milestones_worksheet_index = 9;
-    let planning_documents_worksheet_index = (process.env.PLANNING_DOCUMENTS_WORKSHEET_INDEX || 10);
+    let planning_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 3);
+    let planning_budget_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 4);
+    let planning_milestones_worksheet_index = (process.env.PLANNING_MILESTONES_WORKSHETT_INDEX || 5);
+    let planning_documents_worksheet_index = (process.env.PLANNING_DOCUMENTS_WORKSHEET_INDEX || 6);
 
-    let tender_worksheet_index = (process.env.TENDER_WORKSHEET_INDEX || 11);
-    let tender_items_worksheet_index = (process.env.TENDER_ITEMS_WORKSHEET_INDEX || 14);
-    let tender_tenderers_worksheet_index = (process.env.TENDER_TENDERERS_WORKSHEET_INDEX || 15);
-    let tender_procuring_entity_worksheet_index = (process.env.TENDER_PROCURING_ENTITY_WORKSHEET_INDEX || 16);
+    let tender_worksheet_index = (process.env.TENDER_WORKSHEET_INDEX || 7);
+    let tender_items_worksheet_index = (process.env.TENDER_ITEMS_WORKSHEET_INDEX || 8);
+    let tender_tenderers_worksheet_index = (process.env.TENDER_TENDERERS_WORKSHEET_INDEX || 9);
+    let tender_procuring_entity_worksheet_index = (process.env.TENDER_PROCURING_ENTITY_WORKSHEET_INDEX || 10);
+    let tender_documents_worksheet_index = (process.env.TENDER_DOCUMENTS_WORKSHEET_INDEX || 11);
+    let tender_milestones_worksheet_index = (process.env.TENDER_MILESTONES_WORKSHEET_INDEX || 12);
+    //let tender_amendments_worksheet_index = 13
 
-    let awards_worksheet_index = (process.env.AWARDS_WORKSHEET_INDEX || 20);
-    let awards_suppliers_worksheet_index = (process.env.AWARDS_SUPPLIERS_WORKSHEET_INDEX || 21);
-    let awards_items_worksheet_index = (process.env.AWARDS_ITEMS_WORKSHEET_INDEX || 22);
-    let awards_documents_worksheet_index = (process.env.AWARDS_DOCUMENTS_WORKSHEET_INDEX || 23);
+    let awards_worksheet_index = (process.env.AWARDS_WORKSHEET_INDEX || 14);
+    let awards_suppliers_worksheet_index = (process.env.AWARDS_SUPPLIERS_WORKSHEET_INDEX || 15);
+    let awards_items_worksheet_index = (process.env.AWARDS_ITEMS_WORKSHEET_INDEX || 16);
+    let awards_documents_worksheet_index = (process.env.AWARDS_DOCUMENTS_WORKSHEET_INDEX || 17);
+    //let awards_amendments_worksheet_index = 18
 
-    let contracts_worksheet_index = (process.env.CONTRACTS_WORKSHEET_INDEX || 25);
-    let contracts_items_worksheet_index = (process.env.CONTRACTS_ITEMS_WORKSHEET_INDEX || 26);
-    let contracts_documents_worksheet_index = (process.env.CONTRACTS_DOCUMENTS_WORKSHEET_INDEX || 27);
+    let contracts_worksheet_index = (process.env.CONTRACTS_WORKSHEET_INDEX || 19);
+    let contracts_items_worksheet_index = (process.env.CONTRACTS_ITEMS_WORKSHEET_INDEX || 20);
+    let contracts_documents_worksheet_index = (process.env.CONTRACTS_DOCUMENTS_WORKSHEET_INDEX || 21);
+    //let contracts_amenments = 22
+    //contract related process => 23
 
-    let contracts_implementation_transactions_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_TRANSACTIONS_WORKSHEET_INDEX || 30);
-    let contracts_implementation_milestones_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_MILESTONES_WORKSHEET_INDEX || 31);
-    let contracts_implementation_documents_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_DOCUMENTS_INDEX || 32);
+    let contracts_implementation_transactions_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_TRANSACTIONS_WORKSHEET_INDEX || 24);
+    let contracts_implementation_milestones_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_MILESTONES_WORKSHEET_INDEX || 25);
+    let contracts_implementation_documents_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_DOCUMENTS_INDEX || 26);
 
     console.log('\nBuilding EDCA JSON ...\n');
 
@@ -224,6 +227,17 @@ if ( fs.existsSync(file_path) ) {
             }
 
             //planning milestones
+            release.planning.milestones = [];
+            let planningMilestonesIndexes = findRows(worksheets[planning_milestones_worksheet_index].data, 0, release.clave_procedimiento);
+
+            if (planningMilestonesIndexes.length > 0) {
+                for (let milestone of planningMilestonesIndexes) {
+                    release.planning.milestones.push(buildBlock(worksheets[planning_milestones_worksheet_index].data[0],
+                        worksheets[planning_milestones_worksheet_index].data[milestone]).planning.milestones); //fixes path
+                }
+            } else {
+                console.log('\tWarning: Missing planning -> milestones ', release.clave_procedimiento);
+            }
 
             //planning documents
             paths = worksheets[planning_documents_worksheet_index].data[0];
@@ -284,6 +298,32 @@ if ( fs.existsSync(file_path) ) {
                 release.tender.procuringEntity = buildBlock(paths, worksheets[tender_procuring_entity_worksheet_index].data[tenderProcuringEntityIndex[0]]).tender.procuringEntity; //fixes path
             } else {
                 console.log('\tWarning: Missing tender -> procuringEntity ', release.clave_procedimiento);
+            }
+
+            //tender -> documents
+            release.tender.documents = [];
+            let tenderDocumentsIndexes = findRows(worksheets[tender_documents_worksheet_index].data, 0, release.clave_procedimiento);
+
+            if (tenderDocumentsIndexes.length > 0) {
+                for (let document of tenderDocumentsIndexes) {
+                    release.tender.documents.push(buildBlock(worksheets[tender_documents_worksheet_index].data[0],
+                        worksheets[tender_documents_worksheet_index].data[document]).tender.documents); //fixes path
+                }
+            } else {
+                console.log('\tWarning: Missing tender -> documents ', release.clave_procedimiento);
+            }
+
+            //tender -> milestones
+            release.tender.milestones = [];
+            let tenderMilestonesIndexes = findRows(worksheets[tender_milestones_worksheet_index].data, 0, release.clave_procedimiento);
+
+            if (tenderMilestonesIndexes.length > 0) {
+                for (let milestone of tenderMilestonesIndexes) {
+                    release.tender.milestones.push(buildBlock(worksheets[tender_milestones_worksheet_index].data[0],
+                        worksheets[tender_milestones_worksheet_index].data[milestone]).tender.milestones); //fixes path
+                }
+            } else {
+                console.log('\tWarning: Missing tender -> milestones ', release.clave_procedimiento);
             }
 
             //awards
@@ -447,7 +487,9 @@ if ( fs.existsSync(file_path) ) {
             deleteNullProperties(release_package, true);
 
             //write JSON to disk
-            jsonfile.writeFileSync(path.join(__dirname, 'JSON', ('procedimiento_' + release.clave_procedimiento + '.json')), release_package, {spaces: 2});
+            let output_file = path.join(__dirname, 'JSON', ('procedimiento_' + release.clave_procedimiento + '.json'));
+            jsonfile.writeFileSync(output_file, release_package, {spaces: 2});
+            console.log('\tOutput file: ', output_file);
         }
     }
 
