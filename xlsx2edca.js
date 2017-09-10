@@ -3,6 +3,7 @@ var path = require('path');
 var xlsx = require('node-xlsx').default;
 var file_path = process.argv[2];
 var jsonfile = require('jsonfile');
+const dotenv = require('dotenv').config({path: path.join(__dirname, '.env')});
 
 function buildPath (obj, tokens, value){
     let first_token = tokens[0];
@@ -123,33 +124,33 @@ if (typeof file_path !== 'undefined'){
     }
 
     //worksheet config
-    let release_worksheet_index = 2;
-    let parties_worksheet_index = 3;
-    let buyer_worksheet_index = 4;
+    let release_worksheet_index = (process.env.RELEASE_WORKSHEET_INDEX || 2);
+    let parties_worksheet_index = (process.env.PARTIES_WORKSHEET_INDEX || 3);
+    let buyer_worksheet_index = (process.env.BUYER_WORKSHEET_INDEX ||4);
 
-    let planning_worksheet_index = 6;
+    let planning_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 6);
     //let planning_cotizaciones_worksheet_index = 7;
-    let planning_budget_worksheet_index = 8;
+    let planning_budget_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 8);
     //let planning_milestones_worksheet_index = 9;
-    let planning_documents_worksheet_index = 10;
+    let planning_documents_worksheet_index = (process.env.PLANNING_DOCUMENTS_WORKSHEET_INDEX || 10);
 
-    let tender_worksheet_index = 11;
-    let tender_items_worksheet_index = 14;
-    let tender_tenderers_worksheet_index = 15;
-    let tender_procuring_entity_worksheet_index = 16;
+    let tender_worksheet_index = (process.env.TENDER_WORKSHEET_INDEX || 11);
+    let tender_items_worksheet_index = (process.env.TENDER_ITEMS_WORKSHEET_INDEX || 14);
+    let tender_tenderers_worksheet_index = (process.env.TENDER_TENDERERS_WORKSHEET_INDEX || 15);
+    let tender_procuring_entity_worksheet_index = (process.env.TENDER_PROCURING_ENTITY_WORKSHEET_INDEX || 16);
 
-    let awards_worksheet_index = 20;
-    let awards_suppliers_worksheet_index = 21;
-    let awards_items_worksheet_index = 22;
-    let awards_documents_worksheet_index = 23;
+    let awards_worksheet_index = (process.env.AWARDS_WORKSHEET_INDEX || 20);
+    let awards_suppliers_worksheet_index = (process.env.AWARDS_SUPPLIERS_WORKSHEET_INDEX || 21);
+    let awards_items_worksheet_index = (process.env.AWARDS_ITEMS_WORKSHEET_INDEX || 22);
+    let awards_documents_worksheet_index = (process.env.AWARDS_DOCUMENTS_WORKSHEET_INDEX || 23);
 
-    let contracts_worksheet_index = 25;
-    let contracts_items_worksheet_index = 26;
-    let contracts_documents_worksheet_index = 27;
+    let contracts_worksheet_index = (process.env.CONTRACTS_WORKSHEET_INDEX || 25);
+    let contracts_items_worksheet_index = (process.env.CONTRACTS_ITEMS_WORKSHEET_INDEX || 26);
+    let contracts_documents_worksheet_index = (process.env.CONTRACTS_DOCUMENTS_WORKSHEET_INDEX || 27);
 
-    let contracts_implementation_transactions_worksheet_index = 30;
-    let contracts_implementation_milestones_worksheet_index = 31;
-    let contracts_implementation_documents_worksheet_index = 32;
+    let contracts_implementation_transactions_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_TRANSACTIONS_WORKSHEET_INDEX || 30);
+    let contracts_implementation_milestones_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_MILESTONES_WORKSHEET_INDEX || 31);
+    let contracts_implementation_documents_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_DOCUMENTS_INDEX || 32);
 
     console.log('\nBuilding EDCA JSON ...\n');
 
