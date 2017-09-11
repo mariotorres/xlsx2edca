@@ -188,14 +188,16 @@ if ( fs.existsSync(file_path) ) {
     console.log('\nBuilding EDCA JSON ...\n');
 
     //Releases
-    let paths = worksheets[release_worksheet_index].data[0];
+    let paths = [];
+    console.log(paths);
     for (let ri = 1; ri < worksheets[release_worksheet_index].data.length; ri++) {
-        
+        paths = worksheets[release_worksheet_index].data[0];
         //build release object 
         let release = buildBlock(paths, worksheets[release_worksheet_index].data[ri]);
-        
         if (release.clave_procedimiento !== null && release.clave_procedimiento !== "" && typeof release.clave_procedimiento !== 'undefined') {
             console.log('Processing ', release.clave_procedimiento);
+            //console.log(worksheets[release_worksheet_index].data[ri]);
+            //console.log('release -> ',release);
             release.initiationType = "tender";
 
             //Parties
