@@ -50,15 +50,32 @@ function findRows(WorkSheet, index, key) {
 }
 
 function deleteNullProperties(obj, recursive) {
+
+    if (Array.isArray(obj) ) {
+
+        for (let i =0; i< obj.length; i++){
+            if ( typeof obj[i] === 'undefined' || obj[i] === null){
+                obj.splice(i,1);
+            }else if (recursive && typeof obj[i] === 'object'){
+                deleteNullProperties(obj[i], recursive);
+            }
+        }
+    }
+
+
     for (let i in obj) {
         if (JSON.stringify(obj[i]) === JSON.stringify({}) || JSON.stringify(obj[i]) === JSON.stringify([]) ||
-            obj[i]=== null || obj[i] === '' || obj[i] === 'N/A'|| obj[i]=== 'No aplica') {
+            obj[i] === null || obj[i] === '' || obj[i] === 'N/A'|| obj[i]=== 'No aplica') {
             delete obj[i];
         } else if (recursive && typeof obj[i] === 'object') {
             deleteNullProperties(obj[i], recursive);
-            if (JSON.stringify(obj[i]) === JSON.stringify({})){
+
+            //retorno
+            if (JSON.stringify(obj[i]) === JSON.stringify({}) || obj[i] === null || typeof obj[i] === 'undefined' ||
+                JSON.stringify(obj[i]) === JSON.stringify([])){
                 delete obj[i];
             }
+
         }
     }
 }
