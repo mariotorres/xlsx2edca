@@ -167,18 +167,18 @@ if ( fs.existsSync(file_path) ) {
     let tender_procuring_entity_worksheet_index = (process.env.TENDER_PROCURING_ENTITY_WORKSHEET_INDEX || 10);
     let tender_documents_worksheet_index = (process.env.TENDER_DOCUMENTS_WORKSHEET_INDEX || 11);
     let tender_milestones_worksheet_index = (process.env.TENDER_MILESTONES_WORKSHEET_INDEX || 12);
-    //let tender_amendments_worksheet_index = 13
+    let tender_amendments_worksheet_index = (process.env.TENDER_AMENDMENTS_WORKSHEET_INDEX || 13);
 
     let awards_worksheet_index = (process.env.AWARDS_WORKSHEET_INDEX || 14);
     let awards_suppliers_worksheet_index = (process.env.AWARDS_SUPPLIERS_WORKSHEET_INDEX || 15);
     let awards_items_worksheet_index = (process.env.AWARDS_ITEMS_WORKSHEET_INDEX || 16);
     let awards_documents_worksheet_index = (process.env.AWARDS_DOCUMENTS_WORKSHEET_INDEX || 17);
-    //let awards_amendments_worksheet_index = 18
+    let awards_amendments_worksheet_index = (process.env.AWARDS_AMENDMENTS_WORKSHEET_INDEX || 18);
 
     let contracts_worksheet_index = (process.env.CONTRACTS_WORKSHEET_INDEX || 19);
     let contracts_items_worksheet_index = (process.env.CONTRACTS_ITEMS_WORKSHEET_INDEX || 20);
     let contracts_documents_worksheet_index = (process.env.CONTRACTS_DOCUMENTS_WORKSHEET_INDEX || 21);
-    //let contracts_amenments = 22
+    let contracts_amendments_worksheet_index = (process.env.CONTRACTS_AMENDMENTS_WORKSHEET_INDEX || 22);
     //contract related process => 23
 
     let contracts_implementation_transactions_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_TRANSACTIONS_WORKSHEET_INDEX || 24);
@@ -345,6 +345,20 @@ if ( fs.existsSync(file_path) ) {
                 console.log('\tWarning: Missing tender -> milestones ', release.clave_procedimiento);
             }
 
+            // tender -> amendments
+            release.tender.amendments = [];
+            let tenderAmendmentsIndexes = findRows(worksheets[tender_amendments_worksheet_index].data,0, release.clave_procedimiento);
+
+            if (tenderAmendmentsIndexes.length > 0) {
+                for (let amendment of tenderAmendmentsIndexes) {
+                    release.tender.amendments.push(buildBlock(worksheets[tender_amendments_worksheet_index].data[0],
+                        worksheets[tender_amendments_worksheet_index].data[amenment]).tender.amendments); //fixes path
+                }
+            } else {
+                console.log('\tWarning: Missing tender -> amendments ', release.clave_procedimiento);
+            }
+
+
             //awards
             release.awards = [];
             paths = worksheets[awards_worksheet_index].data[0];
@@ -394,6 +408,20 @@ if ( fs.existsSync(file_path) ) {
                         }
                     } else {
                         console.log('\tWarning: Missing awards -> documents ', award_id);
+                    }
+
+                    //awards -> amendments
+
+                    award.amendments = [];
+                    let awardAmendmentsIndexes = findRows(worksheets[awards_amendments_worksheet_index].data,1, award_id);
+
+                    if (awardAmendmentsIndexes.length > 0) {
+                        for (let amendment of awardAmendmentsIndexes) {
+                            award.amendments.push(buildBlock(worksheets[awards_amendments_worksheet_index].data[0],
+                                worksheets[awards_amendments_worksheet_index].data[amendment]).awards.amendments); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing awards -> amendments ', award_id);
                     }
 
                     release.awards.push( award );
@@ -478,6 +506,19 @@ if ( fs.existsSync(file_path) ) {
                         }
                     } else {
                         console.log('\tWarning: Missing contracts -> implementation -> documents ', contract_id);
+                    }
+
+                    //contracts -> amendments
+                    contract.amendments = [];
+                    let contractAmendmentsIndexes = findRows(worksheets[contracts_amendments_worksheet_index].data,1, contract_id);
+
+                    if (contractAmendmentsIndexes.length > 0) {
+                        for (let amendment of contractAmendmentsIndexes) {
+                            contract.amendments.push(buildBlock(worksheets[contracts_amendments_worksheet_index].data[0],
+                                worksheets[contracts_amendments_worksheet_index].data[amendment]).contracts.amendments); //fixes path
+                        }
+                    } else {
+                        console.log('\tWarning: Missing contracts -> amendments ', contract_id);
                     }
 
                     release.contracts.push( contract );
