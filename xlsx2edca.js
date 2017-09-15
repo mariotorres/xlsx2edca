@@ -17,7 +17,7 @@ function buildPath (obj, tokens, value){
         buildPath(obj[first_token], tokens, value);
     } else {
         if (!isArray(first_token)) {
-            obj[first_token] = (isBoolean(first_token)?parseBoolean(value):(isNaN(value)?value:Number(value)));
+            obj[first_token] = (isBoolean(first_token)?parseBoolean(value):(!isNaN(value)&&first_token!=='postalCode'?Number(value):value));
         } else{
             obj[first_token] = [value];
         }
@@ -86,6 +86,12 @@ function isArray(prop) {
             return true;
             break;
         case "tag":
+            return true;
+            break;
+        case "additionalProcurementCategories":
+            return true;
+            break;
+        case "submissionMethod":
             return true;
             break;
         default:
