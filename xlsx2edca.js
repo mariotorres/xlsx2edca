@@ -195,7 +195,7 @@ if ( fs.existsSync(file_path) ) {
 
     //Releases
     let paths = [];
-    console.log(paths);
+    //console.log(paths);
     for (let ri = 1; ri < worksheets[release_worksheet_index].data.length; ri++) {
         paths = worksheets[release_worksheet_index].data[0];
         //build release object 
