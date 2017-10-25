@@ -159,33 +159,33 @@ if ( fs.existsSync(file_path) ) {
 
     //worksheet config
     let release_worksheet_index = (process.env.RELEASE_WORKSHEET_INDEX || 0);
-    let parties_worksheet_index = (process.env.PARTIES_WORKSHEET_INDEX || 1);
-    let buyer_worksheet_index = (process.env.BUYER_WORKSHEET_INDEX ||2);
+    let related_process_worksheet_index = (process.env.RELEASE_WORKSHEET_INDEX || 1);
+    let parties_worksheet_index = (process.env.PARTIES_WORKSHEET_INDEX || 2);
+    let buyer_worksheet_index = (process.env.BUYER_WORKSHEET_INDEX ||3);
 
-    let planning_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 3);
-    let planning_budget_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 4);
-    let planning_milestones_worksheet_index = (process.env.PLANNING_MILESTONES_WORKSHETT_INDEX || 5);
-    let planning_documents_worksheet_index = (process.env.PLANNING_DOCUMENTS_WORKSHEET_INDEX || 6);
+    let planning_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 4);
+    let planning_budget_worksheet_index = (process.env.PLANNING_WORKSHEET_INDEX || 5);
+    let planning_milestones_worksheet_index = (process.env.PLANNING_MILESTONES_WORKSHETT_INDEX || 6);
+    let planning_documents_worksheet_index = (process.env.PLANNING_DOCUMENTS_WORKSHEET_INDEX || 7);
 
-    let tender_worksheet_index = (process.env.TENDER_WORKSHEET_INDEX || 7);
-    let tender_items_worksheet_index = (process.env.TENDER_ITEMS_WORKSHEET_INDEX || 8);
-    let tender_tenderers_worksheet_index = (process.env.TENDER_TENDERERS_WORKSHEET_INDEX || 9);
-    let tender_procuring_entity_worksheet_index = (process.env.TENDER_PROCURING_ENTITY_WORKSHEET_INDEX || 10);
-    let tender_documents_worksheet_index = (process.env.TENDER_DOCUMENTS_WORKSHEET_INDEX || 11);
-    let tender_milestones_worksheet_index = (process.env.TENDER_MILESTONES_WORKSHEET_INDEX || 12);
-    let tender_amendments_worksheet_index = (process.env.TENDER_AMENDMENTS_WORKSHEET_INDEX || 13);
+    let tender_worksheet_index = (process.env.TENDER_WORKSHEET_INDEX || 8);
+    let tender_items_worksheet_index = (process.env.TENDER_ITEMS_WORKSHEET_INDEX || 9);
+    let tender_tenderers_worksheet_index = (process.env.TENDER_TENDERERS_WORKSHEET_INDEX || 10);
+    let tender_procuring_entity_worksheet_index = (process.env.TENDER_PROCURING_ENTITY_WORKSHEET_INDEX || 11);
+    let tender_documents_worksheet_index = (process.env.TENDER_DOCUMENTS_WORKSHEET_INDEX || 12);
+    let tender_milestones_worksheet_index = (process.env.TENDER_MILESTONES_WORKSHEET_INDEX || 13);
+    let tender_amendments_worksheet_index = (process.env.TENDER_AMENDMENTS_WORKSHEET_INDEX || 14);
 
-    let awards_worksheet_index = (process.env.AWARDS_WORKSHEET_INDEX || 14);
-    let awards_suppliers_worksheet_index = (process.env.AWARDS_SUPPLIERS_WORKSHEET_INDEX || 15);
-    let awards_items_worksheet_index = (process.env.AWARDS_ITEMS_WORKSHEET_INDEX || 16);
-    let awards_documents_worksheet_index = (process.env.AWARDS_DOCUMENTS_WORKSHEET_INDEX || 17);
-    let awards_amendments_worksheet_index = (process.env.AWARDS_AMENDMENTS_WORKSHEET_INDEX || 18);
+    let awards_worksheet_index = (process.env.AWARDS_WORKSHEET_INDEX || 15);
+    let awards_suppliers_worksheet_index = (process.env.AWARDS_SUPPLIERS_WORKSHEET_INDEX || 16);
+    let awards_items_worksheet_index = (process.env.AWARDS_ITEMS_WORKSHEET_INDEX || 17);
+    let awards_documents_worksheet_index = (process.env.AWARDS_DOCUMENTS_WORKSHEET_INDEX || 18);
+    let awards_amendments_worksheet_index = (process.env.AWARDS_AMENDMENTS_WORKSHEET_INDEX || 19);
 
-    let contracts_worksheet_index = (process.env.CONTRACTS_WORKSHEET_INDEX || 19);
-    let contracts_items_worksheet_index = (process.env.CONTRACTS_ITEMS_WORKSHEET_INDEX || 20);
-    let contracts_documents_worksheet_index = (process.env.CONTRACTS_DOCUMENTS_WORKSHEET_INDEX || 21);
-    let contracts_amendments_worksheet_index = (process.env.CONTRACTS_AMENDMENTS_WORKSHEET_INDEX || 22);
-    //contract related process => 23
+    let contracts_worksheet_index = (process.env.CONTRACTS_WORKSHEET_INDEX || 20);
+    let contracts_items_worksheet_index = (process.env.CONTRACTS_ITEMS_WORKSHEET_INDEX || 21);
+    let contracts_documents_worksheet_index = (process.env.CONTRACTS_DOCUMENTS_WORKSHEET_INDEX || 22);
+    let contracts_amendments_worksheet_index = (process.env.CONTRACTS_AMENDMENTS_WORKSHEET_INDEX || 23);
 
     let contracts_implementation_transactions_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_TRANSACTIONS_WORKSHEET_INDEX || 24);
     let contracts_implementation_milestones_worksheet_index = (process.env.CONTRACTS_IMPLEMENTATION_MILESTONES_WORKSHEET_INDEX || 25);
