@@ -19,7 +19,11 @@ function buildPath(obj, tokens, value) {
         if (!isArray(first_token)) {
             obj[first_token] = (isBoolean(first_token) ? parseBoolean(value) : (!isNaN(value) && first_token !== 'postalCode' ? Number(value) : value));
         } else {
+            if ( first_token === 'roles'){
+                    obj[first_token] = (typeof value !== 'undefined')? value.split(','): [value]
+            } else {
             obj[first_token] = [value];
+        }
         }
     }
 }
